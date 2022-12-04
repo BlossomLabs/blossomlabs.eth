@@ -38,7 +38,7 @@ It's very unlikely that our common pool is totally full or totally empty at any 
 
 The "blue line" formula is a bit more complex as we have to translate the equation horizontally until it matches the *current ratio* in the Y-axis. It is the following piecewise formula:
 
-![Screenshot from 2021-07-31 22-09-16|679x222](2.png) 
+![Screenshot from 2021-07-31 22-09-16|679x222](formula.png) 
 
 This can be gracefully translated to Solidity code, as we can see here (or [in remix](https://remix.ethereum.org/?gist=cccf44631d54d0364602acac8881e622)):
 
