@@ -1,6 +1,6 @@
 ---
 slug: dynamic-issuance-policy-v2
-title: Dynamic Issuance Policy v2. From math to code in one post
+title: 💹 Dynamic Issuance Policy v2. From math to code in one post
 authors: sem
 tags: [issuance policy, tokenomics, gardens]
 ---
