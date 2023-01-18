@@ -63,10 +63,10 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'blossom labs',
         logo: {
           alt: 'blossom labs logo',
           src: 'img/logo.svg',
+          srcDark: 'img/logo_dark.svg',
         },
         items: [
           {to: '/blog', label: 'Blog', position: 'left'},
@@ -112,6 +112,10 @@ const config = {
           },
         ],
         copyright: `Copyright © ${new Date().getFullYear()} Blossom Labs.`,
+      },
+      colorMode: {
+        defaultMode: 'light',
+        disableSwitch: true,
       },
       prism: {
         theme: lightCodeTheme,

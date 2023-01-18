@@ -51,11 +51,11 @@ const FeatureList = [
     ),
   },
   {
-    title: 'Wayback Machine',
-    img: '/img/wayback-machine.png',
+    title: 'Rosette Protocol',
+    img: '/img/rosette.png',
     description: (
       <>
-        InterPlanetary Wayback Machine allows the user to go “back in time” and see how ENS linked dApps looked in the past. It also allows to donate in Filecoin to the preservation of those websites.
+        Rosette is a decentralized, disputable protocol built on Ethereum. It focuses on simplifying and facilitating end-users interactions by documenting and describing smart contracts' functions in a human-readable manner.
       </>
     ),
   },
