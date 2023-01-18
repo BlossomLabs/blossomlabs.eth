@@ -12,13 +12,19 @@ function HomepageHeader() {
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
-        <h1 className="hero__title">{siteConfig.title}</h1>
+        <h1 className="hero__title">Researching <span class="inverted br">Emergence</span></h1>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
             to="https://discordapp.com/invite/fmqrqhkjHY/">
-            Join our discord
+            Join our Discord
+          </Link>
+          <div css={{marginLeft:"5px"}}></div>
+          <Link
+            className="button button--secondary button--lg"
+            to="https://github.com/blossomlabs">
+            Visit our Github
           </Link>
         </div>
       </div>

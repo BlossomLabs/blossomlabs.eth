@@ -11,9 +11,30 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #d77a9b;
+  --ifm-color-primary: #f8b9b6;
+  --ifm-font-color-base: #243E2B;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
   --ifm-font-family-base: "Quasimoda";
   --ifm-heading-font-family: "Quasimoda";
+  --ifm-global-radius: 5px;
+}
+
+.hero__title {
+  font-size: 150px;
+  line-height: 178px;
+  text-transform: uppercase;
+}
+
+.hero__title .inverted {
+  color: var(--ifm-color-primary);
+  text-shadow: -3px 0 var(--ifm-font-color-base-inverse), 0 3px var(--ifm-font-color-base-inverse), 3px 0 var(--ifm-font-color-base-inverse), 0 -3px var(--ifm-font-color-base-inverse);
+}
+.br {
+  display: block;
+}
+
+.hero .button {
+  margin-left: 5px;
+  margin-right: 5px;
 }
