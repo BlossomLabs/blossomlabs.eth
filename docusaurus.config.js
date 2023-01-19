@@ -8,7 +8,7 @@ const katex = require('rehype-katex');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'blossom',
+  title: 'Blossom Labs',
   tagline: 'We are a developer team specialized in building blockchain-based infrastructure for online communities.',
   url: 'https://blossom.software',
   baseUrl: '/',
@@ -81,7 +81,7 @@ const config = {
         style: 'light',
         links: [
           {
-            title: 'Blossom Community',
+            title: 'Blossom Labs',
             items: [
               {
                 label: 'Discord',
