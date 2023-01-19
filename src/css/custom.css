@@ -11,7 +11,7 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #f8b9b6;
+  --ifm-color-primary: #F5453A;
   --ifm-font-color-base: #243E2B;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
@@ -20,15 +20,31 @@
   --ifm-global-radius: 5px;
 }
 
+.hero {
+  background-image: url(/static/img/hero-background.svg);
+  background-repeat: no-repeat;
+  background-size: 90% 95%;
+  background-position: center;
+}
+
+.hero--primary {
+  --ifm-hero-text-color: #566E5D;
+  --ifm-hero-background-color: #FFEADB;
+}
+
 .hero__title {
-  font-size: 11vw;
+  font-size: 10vw;
   line-height: 16vw;
   text-transform: uppercase;
 }
 
+.hero__subtitle {
+  margin-bottom: 50px;
+}
+
 .hero__title .inverted {
-  color: var(--ifm-color-primary);
-  text-shadow: -3px 0 var(--ifm-font-color-base-inverse), 0 3px var(--ifm-font-color-base-inverse), 3px 0 var(--ifm-font-color-base-inverse), 0 -3px var(--ifm-font-color-base-inverse);
+  color: var(--ifm-hero-background-color);
+  text-shadow: -3px 0 var(--ifm-hero-text-color), 0 3px var(--ifm-hero-text-color), 3px 0 var(--ifm-hero-text-color), 0 -3px var(--ifm-hero-text-color);
 }
 .br {
   display: block;
@@ -37,4 +53,11 @@
 .hero .button {
   margin-left: 5px;
   margin-right: 5px;
+}
+
+.feature a {
+  color: var(--ifm-font-color-base);
+}
+.feature a:hover {
+  text-decoration: none;
 }
