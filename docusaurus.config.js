@@ -9,7 +9,7 @@ const katex = require('rehype-katex');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'blossom',
-  tagline: 'Software solutions for online communities',
+  tagline: 'We are a developer team specialized in building blockchain-based infrastructure for online communities.',
   url: 'https://blossom.software',
   baseUrl: '/',
   onBrokenLinks: 'throw',
