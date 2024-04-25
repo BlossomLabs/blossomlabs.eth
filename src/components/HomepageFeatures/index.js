@@ -15,6 +15,16 @@ const FeatureList = [
     ),
   },
   {
+    title: 'ENS Wayback Machine',
+    img: '/img/wayback-machine.png',
+    link: 'https://wayback-machine.ens.site/',
+    description: (
+      <>
+        ENS Wayback Machine is a Web3 version of the Internet Archive's Wayback Machine that allows users to view historical versions of IPFS content associated with ENS domains. It is built using Ethereum Name Service (ENS) and InterPlanetary File System (IPFS) technologies.
+      </>
+    ),
+  },
+  {
     title: 'Osmotic Funding',
     img: '/img/osmotic-funding.png',
     link: 'https://showcase.ethglobal.com/ethonline2021/osmotic-funding',
@@ -31,17 +41,7 @@ const FeatureList = [
     link: 'https://forum.1hive.org/t/unbreakable-vows-private-contracts-arbitrated-by-celeste/5012/',
     description: (
       <>
-        Unbreakable Vows are private legal contracts that can be created and signed by parties to give legitimacy to peer to peer agreements. In the Harry Potter’s Wizarding World, an unbreakable vow is a type of binding magical contract cast between two parties, that if broken by either party, would result in the imminent death of whoever broke the contract. In the web3 world, the party who breaks the vow only loses some collateral (tokens, NFTs, etc).
-      </>
-    ),
-  },
-  {
-    title: 'Blobscan Explorer',
-    img: '/img/blobscan.png',
-    link: 'https://blobscan.com',
-    description: (
-      <>
-        A forthcoming upgrade to Ethereum will allow the publishing of temporary blobs of data in the beacon chain. Blobscan is the first blockchain explorer that helps to navigate and visualize those blobs, providing the necessary infrastructure to scale Ethereum.
+        Unbreakable Vows are private contracts that can be created and signed by parties to give legitimacy to peer to peer agreements. In the Harry Potter universe, these vows are magical contracts that, if broken, result in the death of the violator. In the web3 world, breaking the vow leads to the loss of collateral such as tokens or NFTs.
       </>
     ),
   },

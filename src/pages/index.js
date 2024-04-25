@@ -17,7 +17,7 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="https://discordapp.com/invite/fmqrqhkjHY/">
+            to="https://discord.gg/pkhJP2SaWd">
             Join our Discord
           </Link>
           <div css={{marginLeft:"5px"}}></div>
