@@ -1,53 +1,65 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Button from '../components/Button.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ArticleCard from '../components/ArticleCard.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const posts = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
 
 const projects = [
 	{
 		title: 'EVMcrispr',
-		img: '/img/evmcrispr.svg',
-		background: 'black',
+		image: '/img/evmcrispr-card.png',
 		link: 'https://evmcrispr.com',
+		layout: 'image-left' as const,
 		description:
-			'EVMcrispr is a powerful tool that combines a domain-specific language with a Javascript library to interact with Aragon DAOs. With it, you can bundle many DAO operations into just one script, generating a singular transaction, usually a vote.',
+			'EVMcrispr is a tool that simplifies DAO management on Aragon by combining a domain-specific language with a JavaScript library, enabling users to bundle multiple operations into a single transaction.',
+	},
+	{
+		title: 'CouncilHaus',
+		image: '/img/councilhaus-card.png',
+		link: 'https://councilhaus.app',
+		layout: 'image-right' as const,
+		description:
+			'Councilhaus is a continuous budget allocation dApp that empowers DAOs and organizations with a set budget to efficiently distribute funds to contributors and projects. Through dynamic voting, funds are allocated in a transparent and flexible manner.',
+	},
+	{
+		title: 'GovernorHaus',
+		image: '/img/governorhaus-card.png',
+		link: 'https://governorhaus.app',
+		layout: 'image-right' as const,
+		description:
+			'GovernorHaus is an intuitive and user-friendly DAO launcher designed to simplify the creation of DAOs (Decentralized Autonomous Organizations) using OpenZeppelin Governor contracts. It is fully compatible with Tally.xyz, making DAO governance easy and accessible.',
 	},
 	{
 		title: 'ENS Wayback Machine',
-		img: '/img/wayback-machine.png',
+		image: '/img/wayback-machine-card.png',
 		link: 'https://wayback-machine.ens.site/',
+		layout: 'image-left' as const,
 		description:
-			'ENS Wayback Machine is a Web3 version of the Internet Archive\'s Wayback Machine that allows users to view historical versions of IPFS content associated with ENS domains.',
-	},
-	{
-		title: 'Osmotic Funding',
-		img: '/img/osmotic-funding.png',
-		link: 'https://showcase.ethglobal.com/ethonline2021/osmotic-funding',
-		description:
-			'Protocol built on top of Superfluid Finance and Conviction Voting to create and regulate project funding streams based on the interest a community has in them.',
-	},
-	{
-		title: 'Unbreakable Vows',
-		img: '/img/unbreakable-vows.svg',
-		background: 'black',
-		link: 'https://forum.1hive.org/t/unbreakable-vows-private-contracts-arbitrated-by-celeste/5012/',
-		description:
-			'Unbreakable Vows are private contracts that can be created and signed by parties to give legitimacy to peer to peer agreements. Breaking the vow leads to the loss of collateral such as tokens or NFTs.',
-	},
-	{
-		title: 'Lazuline',
-		img: '/img/lazuline.png',
-		link: 'https://forum.aragon.org/t/financial-proposal-demoing-a-tao-voting-dao/3622',
-		description:
-			'A light and fast Aragon Client, like a hummingbird. It takes the name from the lapis lazuli color, and the lazuline sabrewing hummingbird.',
+			'ENS Wayback Machine is a Web3 version of the Internet Archive\'s Wayback Machine that allows users to view historical versions of IPFS content associated with ENS domains. It is built using Ethereum Name Service (ENS) and InterPlanetary File System (IPFS) technologies.',
 	},
 	{
 		title: 'Rosette Protocol',
-		img: '/img/rosette.png',
+		image: '/img/rosette-card.png',
 		link: 'https://rosette.webflow.io/',
+		layout: 'image-left' as const,
 		description:
 			'Rosette is a decentralized, disputable protocol built on Ethereum. It focuses on simplifying and facilitating end-users interactions by documenting and describing smart contracts\' functions in a human-readable manner.',
+	},
+	{
+		title: 'Osmotic Funding',
+		image: '/img/osmotic-funding-card.png',
+		link: 'https://showcase.ethglobal.com/ethonline2021/osmotic-funding',
+		layout: 'image-right' as const,
+		description:
+			'Protocol built on top of Superfluid Finance and Conviction Voting to create and regulate project funding streams based on the interest a community has in them. Community preference is revealed continuously, since tokenholders are able to change their stake at any moment.',
 	},
 ];
 ---
@@ -56,135 +68,111 @@ const projects = [
 <html lang="en">
 	<head>
 		<BaseHead title={`${SITE_TITLE} - Researching Emergence`} description={SITE_DESCRIPTION} />
-		<style>
-			.hero {
-				padding: 4rem 1rem;
-				text-align: center;
-			}
-			.hero h1 {
-				font-size: clamp(2.5rem, 8vw, 5rem);
-				line-height: 1.1;
-				text-transform: uppercase;
-				margin: 0 0 1rem;
-			}
-			.hero p {
-				max-width: 640px;
-				margin: 0 auto 2rem;
-				font-size: 1.125rem;
-				color: rgb(var(--gray));
-			}
-			.buttons {
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				gap: 0.75rem;
-				flex-wrap: wrap;
-			}
-			.buttons a {
-				display: inline-block;
-				padding: 0.75rem 1.5rem;
-				border: 2px solid rgb(var(--black));
-				border-radius: 6px;
-				text-decoration: none;
-				font-weight: bold;
-				color: rgb(var(--black));
-				transition: background-color 0.2s, color 0.2s;
-			}
-			.buttons a:hover {
-				background: rgb(var(--black));
-				color: white;
-			}
-			.projects {
-				max-width: 1100px;
-				margin: 0 auto;
-				padding: 2rem 1rem 4rem;
-			}
-			.projects-grid {
-				display: grid;
-				grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-				gap: 2rem;
-			}
-			.project-card {
-				border: 1px solid rgba(var(--gray-light), 1);
-				border-radius: 8px;
-				overflow: hidden;
-				transition: box-shadow 0.2s;
-			}
-			.project-card:hover {
-				box-shadow: var(--box-shadow);
-			}
-			.project-card .image-wrapper {
-				height: 200px;
-				overflow: hidden;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			}
-			.project-card .image-wrapper img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-			}
-			.project-card .content {
-				padding: 1rem;
-				text-align: center;
-			}
-			.project-card .content h3 {
-				margin: 0 0 0.5rem;
-			}
-			.project-card .content h3 a {
-				color: rgb(var(--black));
-				text-decoration: none;
-			}
-			.project-card .content h3 a:hover {
-				text-decoration: underline;
-			}
-			.project-card .content p {
-				margin: 0;
-				color: rgb(var(--gray));
-				font-size: 0.95rem;
-				line-height: 1.5;
-			}
-		</style>
 	</head>
 	<body>
 		<Header />
-		<main>
-			<section class="hero">
-				<h1>Researching Emergence</h1>
-				<p>{SITE_DESCRIPTION}</p>
-				<div class="buttons">
-					<a href="https://discord.gg/pkhJP2SaWd">Join our Discord</a>
-					<a href="https://github.com/blossomlabs">Visit our Github</a>
+
+		{/* ───── Hero ───── */}
+		<section class="relative flex min-h-screen items-center justify-center overflow-hidden bg-green-sage pt-[60px]">
+			<img
+				src="/img/hero-decoration.svg"
+				alt=""
+				class="pointer-events-none absolute right-0 top-1/2 h-[90%] -translate-y-1/2 translate-x-[10%] rounded-none opacity-30 md:opacity-100"
+			/>
+			<div class="relative z-10 mx-auto max-w-[1232px] px-6 py-24 text-center">
+				<h1 class="text-4xl font-semibold leading-[1.125] tracking-[0.02em] text-offwhite md:text-6xl lg:text-[80px]">
+					Building infrastructure for thriving online communities
+				</h1>
+				<p class="mx-auto mt-8 max-w-[795px] text-lg font-light leading-snug text-offwhite md:text-[32px]">
+					Blossom Labs is a developer team specialized in creating blockchain-based tools and infrastructure to support collaboration, governance and coordination for DAOs and online communities.
+				</p>
+				<div class="mt-10">
+					<Button href="#products">Explore our products</Button>
 				</div>
-			</section>
-			<section class="projects">
-				<div class="projects-grid">
-					{
-						projects.map((project) => (
-							<div class="project-card">
-								<a target="_blank" href={project.link}>
-									<div
-										class="image-wrapper"
-										style={project.background ? `background-color: ${project.background}` : ''}
-									>
-										<img src={project.img} alt={project.title} />
-									</div>
-								</a>
-								<div class="content">
-									<h3>
-										<a target="_blank" href={project.link}>
-											{project.title}
-										</a>
-									</h3>
-									<p>{project.description}</p>
-								</div>
-							</div>
-						))
-					}
+			</div>
+		</section>
+
+		{/* ───── About Us ───── */}
+		<section class="relative overflow-hidden bg-peach">
+			<img
+				src="/img/about-decoration.svg"
+				alt=""
+				class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-none opacity-20 md:opacity-100"
+				style="width: min(1340px, 100%);"
+			/>
+			<div class="relative z-10 mx-auto max-w-[1378px] px-6 py-24 text-center md:py-40">
+				<h2 class="text-4xl font-semibold leading-tight tracking-[0.05em] text-pink-coral md:text-5xl lg:text-[64px]">
+					About Blossom Labs
+				</h2>
+				<p class="mx-auto mt-10 max-w-[761px] text-lg font-normal leading-[1.417] text-green-muted md:text-2xl">
+					We conceptualize, design, develop, and deploy tools for a diverse range of projects. From research to support, we create the dApps and infrastructure that enable coordination and management for organizations, all powered by blockchain technology.
+					<br /><br />
+					All we do, we do it with love.
+				</p>
+			</div>
+		</section>
+
+		{/* ───── Products ───── */}
+		<section id="products" class="bg-offwhite">
+			<div class="mx-auto max-w-[1728px] px-6 py-24 md:py-40">
+				<h2 class="mb-20 text-center text-4xl font-semibold leading-none text-green-dark md:text-6xl lg:text-[80px]">
+					Our products
+				</h2>
+				<div class="flex flex-col gap-16">
+					{projects.map((project) => (
+						<ProjectCard
+							title={project.title}
+							description={project.description}
+							image={project.image}
+							link={project.link}
+							layout={project.layout}
+						/>
+					))}
 				</div>
-			</section>
-		</main>
+			</div>
+		</section>
+
+		{/* ───── Blog ───── */}
+		<section class="bg-offwhite">
+			<div class="mx-auto max-w-[1728px] px-6 py-24 md:py-40">
+				<h2 class="mb-16 text-center text-4xl font-semibold leading-tight tracking-[0.05em] text-green-dark md:text-5xl lg:text-[64px]">
+					Visit our blog
+				</h2>
+				<div class="mx-auto grid max-w-[1378px] grid-cols-1 justify-items-center gap-8 md:grid-cols-2 lg:grid-cols-3">
+					{posts.map((post) => (
+						<ArticleCard
+							title={post.data.title}
+							excerpt={post.data.description ?? ''}
+							author={post.data.author ?? 'Sem'}
+							date={post.data.pubDate}
+							slug={post.data.slug ?? post.id}
+						/>
+					))}
+				</div>
+			</div>
+		</section>
+
+		{/* ───── Get In Touch ───── */}
+		<section id="contact" class="relative overflow-hidden bg-white">
+			<img
+				src="/img/contact-decoration.svg"
+				alt=""
+				class="pointer-events-none absolute right-[5%] top-1/2 hidden -translate-y-1/2 rounded-none md:block"
+				style="width: min(475px, 30%);"
+			/>
+			<div class="relative z-10 mx-auto max-w-[1378px] px-6 py-24 md:py-40">
+				<h2 class="text-4xl font-semibold leading-tight tracking-[0.05em] text-green-sage md:text-5xl lg:text-[64px]">
+					Get in touch
+				</h2>
+				<p class="mt-8 max-w-[650px] text-lg font-light leading-snug text-green-muted md:text-[32px]">
+					Interested in one of our products or working with us? Feel free to reach out! We'll contact you soon.
+				</p>
+				<div class="mt-10">
+					<Button href="mailto:contact@blossom.software">Contact us</Button>
+				</div>
+			</div>
+		</section>
+
 		<Footer />
 	</body>
 </html>

@@ -1,0 +1,40 @@
+---
+import Button from './Button.astro';
+
+interface Props {
+	title: string;
+	description: string;
+	image: string;
+	link: string;
+	layout?: 'image-left' | 'image-right';
+}
+
+const { title, description, image, link, layout = 'image-left' } = Astro.props;
+const isImageLeft = layout === 'image-left';
+---
+
+<div class="mx-auto w-full max-w-[1378px] overflow-hidden rounded-[15px] bg-white shadow-[0_5px_10px_rgba(0,0,0,0.05)]">
+	<div class:list={[
+		'flex flex-col',
+		isImageLeft ? 'md:flex-row' : 'md:flex-row-reverse',
+	]}>
+		<div class="aspect-673/498 w-full shrink-0 overflow-hidden rounded-[15px] md:w-[49%]">
+			<img
+				src={image}
+				alt={title}
+				class="h-full w-full rounded-none object-cover"
+			/>
+		</div>
+		<div class="flex flex-1 flex-col justify-center gap-6 p-8 md:p-12">
+			<h3 class="text-2xl font-medium leading-tight tracking-normal text-green-dark md:text-[32px]">
+				{title}
+			</h3>
+			<p class="text-base font-light leading-tight text-green-muted md:text-2xl">
+				{description}
+			</p>
+			<div>
+				<Button href={link} size="small" target="_blank">See site</Button>
+			</div>
+		</div>
+	</div>
+</div>
