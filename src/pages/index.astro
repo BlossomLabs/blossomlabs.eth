@@ -12,52 +12,52 @@ const posts = (await getCollection('blog'))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 	.slice(0, 3);
 
+function authorImagePath(author: string): string {
+	const slug = author.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+	return `/authors/${slug}.webp`;
+}
+
 const projects = [
 	{
 		title: 'EVMcrispr',
-		image: '/img/evmcrispr-card.png',
+		logo: '/img/evmcrispr-logo.svg',
 		link: 'https://evmcrispr.com',
-		layout: 'image-left' as const,
 		description:
 			'EVMcrispr is a tool that simplifies DAO management on Aragon by combining a domain-specific language with a JavaScript library, enabling users to bundle multiple operations into a single transaction.',
 	},
 	{
+		title: 'Octocash',
+		image: '/img/octocash-card.png',
+		link: 'https://octo.cash',
+		description:
+			'Octocash is a cross-chain token consolidation tool that gathers your scattered tokens across 7 chains into one place. Powered by Circle\'s CCTPv2 for bridges and Odos for swaps, it lets you choose which tokens to consolidate and where to send them, all in a few clicks.',
+	},
+	{
+		title: 'ENS Wayback Machine',
+		image: '/img/wayback-machine-card.png',
+		link: 'https://wayback-machine.eth.limo',
+		description:
+			'ENS Wayback Machine is a Web3 version of the Internet Archive\'s Wayback Machine that allows users to view historical versions of IPFS content associated with ENS domains. It is built using Ethereum Name Service (ENS) and InterPlanetary File System (IPFS) technologies.',
+	},
+	{
 		title: 'CouncilHaus',
 		image: '/img/councilhaus-card.png',
-		link: 'https://councilhaus.app',
-		layout: 'image-right' as const,
+		link: 'https://council.haus',
 		description:
 			'Councilhaus is a continuous budget allocation dApp that empowers DAOs and organizations with a set budget to efficiently distribute funds to contributors and projects. Through dynamic voting, funds are allocated in a transparent and flexible manner.',
 	},
 	{
 		title: 'GovernorHaus',
-		image: '/img/governorhaus-card.png',
-		link: 'https://governorhaus.app',
-		layout: 'image-right' as const,
+		logo: '/img/governorhaus-logo.svg',
+		logoBackground: 'hsl(251.4 91.3% 95.5%)',
+		link: 'https://governor.haus',
 		description:
 			'GovernorHaus is an intuitive and user-friendly DAO launcher designed to simplify the creation of DAOs (Decentralized Autonomous Organizations) using OpenZeppelin Governor contracts. It is fully compatible with Tally.xyz, making DAO governance easy and accessible.',
-	},
-	{
-		title: 'ENS Wayback Machine',
-		image: '/img/wayback-machine-card.png',
-		link: 'https://wayback-machine.ens.site/',
-		layout: 'image-left' as const,
-		description:
-			'ENS Wayback Machine is a Web3 version of the Internet Archive\'s Wayback Machine that allows users to view historical versions of IPFS content associated with ENS domains. It is built using Ethereum Name Service (ENS) and InterPlanetary File System (IPFS) technologies.',
-	},
-	{
-		title: 'Rosette Protocol',
-		image: '/img/rosette-card.png',
-		link: 'https://rosette.webflow.io/',
-		layout: 'image-left' as const,
-		description:
-			'Rosette is a decentralized, disputable protocol built on Ethereum. It focuses on simplifying and facilitating end-users interactions by documenting and describing smart contracts\' functions in a human-readable manner.',
 	},
 	{
 		title: 'Osmotic Funding',
 		image: '/img/osmotic-funding-card.png',
 		link: 'https://showcase.ethglobal.com/ethonline2021/osmotic-funding',
-		layout: 'image-right' as const,
 		description:
 			'Protocol built on top of Superfluid Finance and Conviction Voting to create and regulate project funding streams based on the interest a community has in them. Community preference is revealed continuously, since tokenholders are able to change their stake at any moment.',
 	},
@@ -77,17 +77,17 @@ const projects = [
 			<img
 				src="/img/hero-decoration.svg"
 				alt=""
-				class="pointer-events-none absolute right-0 top-1/2 h-[90%] -translate-y-1/2 translate-x-[10%] rounded-none opacity-30 md:opacity-100"
+				class="pointer-events-none absolute left-1/2 top-1/2 h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-none opacity-30 md:opacity-100"
 			/>
 			<div class="relative z-10 mx-auto max-w-[1232px] px-6 py-24 text-center">
 				<h1 class="text-4xl font-semibold leading-[1.125] tracking-[0.02em] text-offwhite md:text-6xl lg:text-[80px]">
-					Building infrastructure for thriving online communities
+					Building <span style="color: #F8B9B6">infrastructure</span> for thriving online communities
 				</h1>
 				<p class="mx-auto mt-8 max-w-[795px] text-lg font-light leading-snug text-offwhite md:text-[32px]">
 					Blossom Labs is a developer team specialized in creating blockchain-based tools and infrastructure to support collaboration, governance and coordination for DAOs and online communities.
 				</p>
 				<div class="mt-10">
-					<Button href="#products">Explore our products</Button>
+					<Button href="#products" size="small">Explore our products</Button>
 				</div>
 			</div>
 		</section>
@@ -97,12 +97,12 @@ const projects = [
 			<img
 				src="/img/about-decoration.svg"
 				alt=""
-				class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-none opacity-20 md:opacity-100"
+				class="pointer-events-none absolute left-1/2 top-1/2 rounded-none opacity-20 md:opacity-100 animate-spin-slow"
 				style="width: min(1340px, 100%);"
 			/>
 			<div class="relative z-10 mx-auto max-w-[1378px] px-6 py-24 text-center md:py-40">
-				<h2 class="text-4xl font-semibold leading-tight tracking-[0.05em] text-pink-coral md:text-5xl lg:text-[64px]">
-					About Blossom Labs
+				<h2 class="text-4xl font-semibold leading-tight tracking-[0.05em] md:text-5xl lg:text-[64px]">
+					<span style="color: #678A74">About</span> <span class="text-pink-coral">Blossom Labs</span>
 				</h2>
 				<p class="mx-auto mt-10 max-w-[761px] text-lg font-normal leading-[1.417] text-green-muted md:text-2xl">
 					We conceptualize, design, develop, and deploy tools for a diverse range of projects. From research to support, we create the dApps and infrastructure that enable coordination and management for organizations, all powered by blockchain technology.
@@ -115,17 +115,18 @@ const projects = [
 		{/* ───── Products ───── */}
 		<section id="products" class="bg-offwhite">
 			<div class="mx-auto max-w-[1728px] px-6 py-24 md:py-40">
-				<h2 class="mb-20 text-center text-4xl font-semibold leading-none text-green-dark md:text-6xl lg:text-[80px]">
-					Our products
+				<h2 class="mb-20 text-center text-4xl font-semibold leading-none md:text-6xl lg:text-[80px]">
+					<span style="color: #678A74">Our</span> <span class="text-green-dark">products</span>
 				</h2>
-				<div class="flex flex-col gap-16">
+				<div class="products-list flex flex-col gap-16">
 					{projects.map((project) => (
 						<ProjectCard
 							title={project.title}
 							description={project.description}
 							image={project.image}
+							logo={project.logo}
+							logoBackground={project.logoBackground}
 							link={project.link}
-							layout={project.layout}
 						/>
 					))}
 				</div>
@@ -135,8 +136,8 @@ const projects = [
 		{/* ───── Blog ───── */}
 		<section class="bg-offwhite">
 			<div class="mx-auto max-w-[1728px] px-6 py-24 md:py-40">
-				<h2 class="mb-16 text-center text-4xl font-semibold leading-tight tracking-[0.05em] text-green-dark md:text-5xl lg:text-[64px]">
-					Visit our blog
+				<h2 class="mb-16 text-center text-4xl font-semibold leading-tight tracking-[0.05em] md:text-5xl lg:text-[64px]">
+					<span style="color: #678A74">Read</span> <span class="text-green-dark">our blog</span>
 				</h2>
 				<div class="mx-auto grid max-w-[1378px] grid-cols-1 justify-items-center gap-8 md:grid-cols-2 lg:grid-cols-3">
 					{posts.map((post) => (
@@ -144,6 +145,7 @@ const projects = [
 							title={post.data.title}
 							excerpt={post.data.description ?? ''}
 							author={post.data.author ?? 'Sem'}
+							authorImage={authorImagePath(post.data.author ?? 'Sem')}
 							date={post.data.pubDate}
 							slug={post.data.slug ?? post.id}
 						/>
@@ -158,17 +160,17 @@ const projects = [
 				src="/img/contact-decoration.svg"
 				alt=""
 				class="pointer-events-none absolute right-[5%] top-1/2 hidden -translate-y-1/2 rounded-none md:block"
-				style="width: min(475px, 30%);"
+				style="width: min(600px, 40%);"
 			/>
 			<div class="relative z-10 mx-auto max-w-[1378px] px-6 py-24 md:py-40">
-				<h2 class="text-4xl font-semibold leading-tight tracking-[0.05em] text-green-sage md:text-5xl lg:text-[64px]">
-					Get in touch
+				<h2 class="text-4xl font-semibold leading-tight tracking-[0.05em] md:text-5xl lg:text-[64px]">
+					<span style="color: #678A74">Get in</span> <span class="text-green-dark">touch</span>
 				</h2>
 				<p class="mt-8 max-w-[650px] text-lg font-light leading-snug text-green-muted md:text-[32px]">
 					Interested in one of our products or working with us? Feel free to reach out! We'll contact you soon.
 				</p>
 				<div class="mt-10">
-					<Button href="mailto:contact@blossom.software">Contact us</Button>
+					<Button href="https://discordapp.com/invite/fmqrqhkjHY/" size="small" target="_blank">Contact us</Button>
 				</div>
 			</div>
 		</section>

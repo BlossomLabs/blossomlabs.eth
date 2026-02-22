@@ -7,9 +7,10 @@ interface Props {
 	author: string;
 	date: Date;
 	slug: string;
+	authorImage?: string;
 }
 
-const { title, excerpt, author, date, slug } = Astro.props;
+const { title, excerpt, author, date, slug, authorImage } = Astro.props;
 
 const formattedDate = date.toLocaleDateString('en-us', {
 	year: 'numeric',
@@ -20,19 +21,28 @@ const formattedDate = date.toLocaleDateString('en-us', {
 
 <div class="flex w-full max-w-[404px] flex-col overflow-hidden rounded-[15px] bg-white shadow-[0_5px_10px_rgba(0,0,0,0.05)]">
 	<div class="flex flex-1 flex-col gap-4 p-8 pt-10">
-		<div class="flex items-center gap-3">
-			<div class="h-10 w-10 shrink-0 rounded-full bg-[#D9D9D9]"></div>
-			<div class="flex flex-col">
-				<span class="text-base font-normal text-green-muted">By {author}</span>
-				<span class="text-base font-light text-green-muted">{formattedDate}</span>
-			</div>
-		</div>
 		<h3 class="text-xl font-medium leading-tight tracking-[0.05em] text-green-dark md:text-[28px] md:leading-tight">
 			{title}
 		</h3>
 		<p class="line-clamp-4 text-base font-normal leading-relaxed text-green-muted">
 			{excerpt}
 		</p>
+		<div class="flex items-center gap-3">
+			<div class="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-[#D9D9D9]">
+				{authorImage && (
+					<img
+						src={authorImage}
+						alt={author}
+						class="h-full w-full object-cover"
+						onerror="this.style.display='none'"
+					/>
+				)}
+			</div>
+			<div class="flex flex-col">
+				<span class="text-base font-normal text-green-muted">By {author}</span>
+				<span class="text-base font-light text-green-muted">{formattedDate}</span>
+			</div>
+		</div>
 	</div>
 	<div class="px-8 pb-8">
 		<Button href={`/blog/${slug}`} size="small" class="w-full">Read article</Button>
