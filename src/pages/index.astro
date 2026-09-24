@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -12,6 +13,11 @@ const posts = (await getCollection('blog'))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 	.slice(0, 3);
 
+const caseStudyOrder = ['conviction-voting', 'aragon-dao', 'councilhaus'];
+const caseStudies = (await getCollection('work'))
+	.filter((study) => caseStudyOrder.includes(study.data.slug ?? study.id))
+	.sort((a, b) => caseStudyOrder.indexOf(a.data.slug ?? a.id) - caseStudyOrder.indexOf(b.data.slug ?? b.id));
+
 function authorImagePath(author: string): string {
 	const slug = author.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 	return `/authors/${slug}.webp`;
@@ -21,48 +27,76 @@ const projects = [
 	{
 		title: 'EVMcrispr',
 		logo: '/img/evmcrispr-logo.svg',
+		year: '2021 – present',
 		link: 'https://evmcrispr.com',
 		description:
-			'EVMcrispr is a tool that simplifies DAO management on Aragon by combining a domain-specific language with a JavaScript library, enabling users to bundle multiple operations into a single transaction.',
-	},
-	{
-		title: 'Octocash',
-		image: '/img/octocash-card.png',
-		link: 'https://octo.cash',
-		description:
-			'Octocash is a cross-chain token consolidation tool that gathers your scattered tokens across 7 chains into one place. Powered by Circle\'s CCTPv2 for bridges and Odos for swaps, it lets you choose which tokens to consolidate and where to send them, all in a few clicks.',
+			'EVMcrispr is a scripting language for Ethereum. Describe what you want to happen on-chain in a few readable lines, from DAO governance to ENS and token operations, simulate it on a fork before it touches your wallet, batch it into a single transaction, and share scripts anyone can review. Use it from the web terminal, the CLI, or AI agents via MCP.',
 	},
 	{
 		title: 'ENS Wayback Machine',
 		image: '/img/wayback-machine-card.png',
+		year: '2022 – present',
 		link: 'https://wayback-machine.eth.limo',
 		description:
 			'ENS Wayback Machine is a Web3 version of the Internet Archive\'s Wayback Machine that allows users to view historical versions of IPFS content associated with ENS domains. It is built using Ethereum Name Service (ENS) and InterPlanetary File System (IPFS) technologies.',
 	},
 	{
-		title: 'CouncilHaus',
-		image: '/img/councilhaus-card.png',
-		link: 'https://council.haus',
+		title: 'Octocash',
+		image: '/img/octocash-card.png',
+		year: '2025 – present',
+		link: 'https://octo.cash',
 		description:
-			'Councilhaus is a continuous budget allocation dApp that empowers DAOs and organizations with a set budget to efficiently distribute funds to contributors and projects. Through dynamic voting, funds are allocated in a transparent and flexible manner.',
+			'Octocash gathers tokens scattered across 8 chains and multiple wallets, Safes included, into the wallet, token and chain of your choice. Swaps run through Delora, and bridges through Circle\'s CCTPv2 and the Gnosis Omnibridge. Pick what to consolidate, sign a plan that updates live, and optionally land privately in a Railgun address. Non-custodial and open source.',
+	},
+	{
+		title: 'Assertions',
+		logo: '/img/assertions-logo.svg',
+		logoBackground: '#F7F5F1',
+		year: '2026 – present',
+		link: 'https://assertions.eth.limo',
+		description:
+			'Between signing and execution, many things may change. Assertions are on-chain checks that run inside the same transaction as a DAO proposal, Safe batch or protocol upgrade, verifying balances, ownership and contract state at the moment it executes. If one fails, nothing happens. Built on ERC-8211, it guarded TheDAO\'s $220M treasury move.',
+	},
+];
+
+const pastProjects = [
+	{
+		title: 'Airstreams',
+		logo: '/img/airstreams-logo.svg',
+		logoBackground: '#FDF6DC',
+		year: '2024',
+		link: 'https://airstreams.xyz',
+		description:
+			'Streaming airdrops powered by Superfluid: tokens are streamed to recipients over time instead of dropped at once, rewarding ongoing engagement and avoiding sudden sell-offs.',
 	},
 	{
 		title: 'GovernorHaus',
 		logo: '/img/governorhaus-logo.svg',
 		logoBackground: 'hsl(251.4 91.3% 95.5%)',
+		year: '2024',
 		link: 'https://governor.haus',
 		description:
-			'GovernorHaus is an intuitive and user-friendly DAO launcher designed to simplify the creation of DAOs (Decentralized Autonomous Organizations) using OpenZeppelin Governor contracts. It is fully compatible with Tally.xyz, making DAO governance easy and accessible.',
+			'A no-code DAO launcher that deploys OpenZeppelin Governor DAOs from a simple form, with bulk token-holder import and automatic listing on Tally.',
+	},
+	{
+		title: 'Unbreakable Vows',
+		logo: '/img/unbreakable-vows.svg',
+		logoBackground: '#1C1B22',
+		year: '2022',
+		link: 'https://ethglobal.com/showcase/unbreakable-vows-s3gvt',
+		description:
+			'Ricardian-style agreements backed by ERC-20 collateral, with disputes settled by Aragon Court or Celeste and optional Superfluid streams for recurring payments.',
 	},
 	{
 		title: 'Osmotic Funding',
 		image: '/img/osmotic-funding-card.png',
-		link: 'https://showcase.ethglobal.com/ethonline2021/osmotic-funding',
+		year: '2021',
+		link: 'https://ethglobal.com/showcase/osmotic-funding-kz5ra',
 		description:
-			'Protocol built on top of Superfluid Finance and Conviction Voting to create and regulate project funding streams based on the interest a community has in them. Community preference is revealed continuously, since tokenholders are able to change their stake at any moment.',
+			'Combines Superfluid streams with Conviction Voting so each project\'s funding rate continuously flows toward the support its community stakes behind it. 1Hive later ran it in production as Fluid Proposals.',
 	},
 ];
----
+------
 
 <!doctype html>
 <html lang="en">
@@ -115,9 +149,12 @@ const projects = [
 		{/* ───── Products ───── */}
 		<section id="products" class="bg-offwhite">
 			<div class="mx-auto max-w-[1728px] px-6 py-24 md:py-40">
-				<h2 class="mb-20 text-center text-4xl font-semibold leading-none md:text-6xl lg:text-[80px]">
+				<h2 class="text-center text-4xl font-semibold leading-none md:text-6xl lg:text-[80px]">
 					<span style="color: #678A74">Our</span> <span class="text-green-dark">products</span>
 				</h2>
+				<p class="mx-auto mb-20 mt-8 max-w-[860px] text-center text-lg font-light leading-snug text-green-muted md:text-2xl lg:text-[28px]">
+					The tools we build and maintain today. Each one grew out of a coordination problem we ran into ourselves, and each is open source for anyone to use, audit and build on.
+				</p>
 				<div class="products-list flex flex-col gap-16">
 					{projects.map((project) => (
 						<ProjectCard
@@ -126,8 +163,88 @@ const projects = [
 							image={project.image}
 							logo={project.logo}
 							logoBackground={project.logoBackground}
+							year={project.year}
 							link={project.link}
 						/>
+					))}
+				</div>
+			</div>
+		</section>
+
+		{/* ───── Governance Case Studies ───── */}
+		<section id="case-studies" class="bg-offwhite">
+			<div class="mx-auto max-w-[1378px] px-6 pb-24 md:pb-40">
+				<h2 class="text-center text-4xl font-semibold leading-tight tracking-[0.05em] md:text-5xl lg:text-[64px]">
+					<span style="color: #678A74">Governance</span> <span class="text-green-dark">case studies</span>
+				</h2>
+				<p class="mx-auto mb-20 mt-8 max-w-[860px] text-center text-lg font-light leading-snug text-green-muted md:text-2xl lg:text-[28px]">
+					Longer engagements with communities that fund and govern themselves together: what they needed, what we built alongside them, and what came out of it.
+				</p>
+				<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+					{caseStudies.map((study) => (
+						<a
+							href={`/work/${study.data.slug ?? study.id}/`}
+							class="flex flex-col overflow-hidden rounded-[15px] bg-white shadow-[0_5px_10px_rgba(0,0,0,0.05)] transition-shadow hover:no-underline hover:shadow-[0_5px_20px_rgba(0,0,0,0.1)]"
+						>
+							<div class="aspect-[1200/630] w-full overflow-hidden">
+								{(study.data.cardImage ?? study.data.heroImage) && (
+									<Image
+										src={study.data.cardImage ?? study.data.heroImage}
+										alt={(study.data.cardImage ? study.data.cardImageAlt : study.data.heroImageAlt) ?? study.data.title}
+										width={800}
+										class="h-full w-full rounded-none object-cover object-top"
+									/>
+								)}
+							</div>
+							<div class="flex flex-1 flex-col gap-4 p-8">
+								<div class="flex items-baseline justify-between gap-4">
+									<span class="font-nav text-base text-green-light">{study.data.client}</span>
+									<span class="shrink-0 font-nav text-base text-green-light">{study.data.period}</span>
+								</div>
+								<h3 class="m-0 text-2xl font-medium leading-tight text-green-dark">{study.data.title}</h3>
+								<p class="m-0 text-base font-light leading-snug text-green-muted">{study.data.summary}</p>
+								<span class="mt-auto pt-2 font-nav text-base text-green-dark">Read the case study →</span>
+							</div>
+						</a>
+					))}
+				</div>
+			</div>
+		</section>
+
+		{/* ───── MVPs and Other Ideas ───── */}
+		<section id="past-projects" class="bg-offwhite">
+			<div class="mx-auto max-w-[1378px] px-6 pb-24 md:pb-40">
+				<h2 class="text-center text-4xl font-semibold leading-tight tracking-[0.05em] md:text-5xl lg:text-[64px]">
+					<span style="color: #678A74">MVPs</span> <span class="text-green-dark">and other ideas</span>
+				</h2>
+				<p class="mx-auto mb-20 mt-8 max-w-[860px] text-center text-lg font-light leading-snug text-green-muted md:text-2xl lg:text-[28px]">
+					Hackathon builds, experiments and early bets. Not all of them became products, but each one taught us something we still carry into our work.
+				</p>
+				<div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+					{pastProjects.map((project) => (
+						<a
+							href={project.link}
+							target={project.link.startsWith('http') ? '_blank' : undefined}
+							class="flex flex-col overflow-hidden rounded-[15px] bg-white shadow-[0_5px_10px_rgba(0,0,0,0.05)] transition-shadow hover:no-underline hover:shadow-[0_5px_20px_rgba(0,0,0,0.1)] md:flex-row"
+						>
+							<div
+								class="relative aspect-[1200/630] w-full shrink-0 overflow-hidden md:aspect-auto md:w-[42%]"
+								style={project.logo ? `background-color: ${project.logoBackground}` : undefined}
+							>
+								{project.logo ? (
+									<img src={project.logo} alt={project.title} class="absolute inset-0 h-full w-full rounded-none object-contain p-8" />
+								) : (
+									<img src={project.image} alt={project.title} class="absolute inset-0 h-full w-full rounded-none object-cover" />
+								)}
+							</div>
+							<div class="flex flex-1 flex-col justify-center gap-4 p-8 md:min-h-[240px]">
+								<div class="flex items-baseline justify-between gap-4">
+									<h3 class="m-0 text-2xl font-medium leading-tight text-green-dark">{project.title}</h3>
+									<span class="font-nav text-base text-green-light">{project.year}</span>
+								</div>
+								<p class="m-0 text-base font-light leading-snug text-green-muted">{project.description}</p>
+							</div>
+						</a>
 					))}
 				</div>
 			</div>
@@ -136,9 +253,12 @@ const projects = [
 		{/* ───── Blog ───── */}
 		<section class="bg-offwhite">
 			<div class="mx-auto max-w-[1728px] px-6 py-24 md:py-40">
-				<h2 class="mb-16 text-center text-4xl font-semibold leading-tight tracking-[0.05em] md:text-5xl lg:text-[64px]">
+				<h2 class="text-center text-4xl font-semibold leading-tight tracking-[0.05em] md:text-5xl lg:text-[64px]">
 					<span style="color: #678A74">Read</span> <span class="text-green-dark">our blog</span>
 				</h2>
+				<p class="mx-auto mb-20 mt-8 max-w-[860px] text-center text-lg font-light leading-snug text-green-muted md:text-2xl lg:text-[28px]">
+					Notes from our research on governance, funding mechanisms and token economics, from first intuitions to formulas and code.
+				</p>
 				<div class="mx-auto grid max-w-[1378px] grid-cols-1 justify-items-center gap-8 md:grid-cols-2 lg:grid-cols-3">
 					{posts.map((post) => (
 						<ArticleCard

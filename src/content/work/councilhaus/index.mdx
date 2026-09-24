@@ -1,0 +1,129 @@
+---
+slug: councilhaus
+title: "A streaming budget for Superfluid"
+summary: "Superfluid wanted its Frontier Guild to pay builders continuously, not once at the end of a hackathon. We built CouncilHaus, where judges split a monthly budget between teams and a Superfluid pool streams it to them, sending $67k to 11 teams over two seasons."
+client: "Superfluid"
+period: "2024 – 2025"
+role: "Mechanism design, smart contracts, subgraph and frontend"
+stack: ["Superfluid GDA", "OpenZeppelin", "Hardhat Ignition", "The Graph", "Optimism", "Base"]
+links:
+  - { label: "CouncilHaus app", href: "https://council.haus" }
+  - { label: "Source code", href: "https://github.com/BlossomLabs/councilhaus" }
+  - { label: "The Frontier Guild, by Superfluid", href: "https://medium.com/superfluid-blog/the-superfluid-frontier-guild-a-new-way-to-build-developer-programs-721265a49b42" }
+metrics:
+  - { value: "$67k", label: "USDCx streamed to teams over two on-chain seasons" }
+  - { value: "80%", label: "of Season 2 projects went to production" }
+  - { value: "8", label: "demo days, each one re-splitting the stream" }
+  - { value: "11", label: "teams funded across the two seasons" }
+heroImage: "./councilhaus-card.png"
+heroImageAlt: "CouncilHaus, a continuous budget allocation app"
+---
+
+## The challenge
+
+Most developer programs pay once. A team wins a hackathon, collects the prize and often stops building the week after. Superfluid wanted the opposite: a program that kept paying teams for as long as they kept shipping, and paid them less as soon as they stopped.
+
+That became the **Superfluid Frontier Guild**: a contest that runs for months between five or six teams, with a demo day every two weeks. A single stream of USDCx, $15,000 a month in Season 2 and $20,000 in Season 3, flows to all the teams. How it is split depends on what a group of judges saw at the last demo day.
+
+## Season 1: a spreadsheet
+
+Superfluid ran the first season off-chain on purpose. Each judge got **100 units** to spread across the teams they thought were doing the best work. After every demo day the votes went into a Google spreadsheet, the sheet worked out each team's share, and the streams were updated to match.
+
+It was the cheapest way to find out whether the idea worked, and it did: streaming the rewards turned out to motivate teams far more than any one-off prize Superfluid had tried before. It also showed what had to change. Every demo day meant collecting votes, checking the maths and updating the streams off-chain, and the teams had to trust that the sheet matched what they were paid. Superfluid wanted the whole thing on-chain, voting included.
+
+## Seasons 2 and 3: CouncilHaus
+
+For the next seasons we moved the whole mechanism on-chain, and built it so any organization could reuse it. The key piece is Superfluid's **General Distribution Agreement (GDA)**.
+
+A GDA pool streams tokens to its members in proportion to the units each one holds. Whoever funds the pool opens a single stream into it; the protocol splits that stream between members, second by second, and rebalances it automatically when units change. That was exactly what the spreadsheet did, minus the manual steps.
+
+**CouncilHaus turns judges' votes into pool units.** Each council is one contract that:
+
+- Gives every judge a **non-transferable voting token**. The balance is their voting power, like the 100 units of season 1.
+- Keeps a list of **grantees**, the teams competing in the season.
+- Owns a **Superfluid pool** in the distribution token (USDCx for the Frontier Guild), which anyone can fund.
+
+When a judge calls `allocateBudget`, the contract removes the units from their previous vote and adds the new ones to each team they chose. A team's units are the sum of every judge's allocation to it, so its share of the stream always matches the council's current opinion. Superfluid only has to keep one stream open into the pool; after each demo day, judges update their votes and the payouts follow in the same block.
+
+## Design decisions
+
+**Votes can't be bought or moved.** The voting token reverts on `transfer`, `transferFrom` and `approve`, and has zero decimals. Voting power can only be granted or removed by the council's managers.
+
+**Pool units belong to the council.** The pool is created with transferable units disabled, so a team can't pass its share to someone else. Distribution from any address is enabled, so the funder doesn't need to be the council, and several funders could stream into the same pool.
+
+**Leaving the council undoes a vote.** Removing a judge burns their voting power and clears their allocation, so their past votes stop affecting the split. Removing a team sets its units to zero, and it simply drops out of every judge's allocation.
+
+**Bounded gas, and forced choices.** Each judge can split their vote across at most 10 teams, and voting power is capped, so a single vote always costs a predictable amount of gas. The admin can lower that limit: in Season 3 it was set to 4, so with six teams competing, every judge had to leave some out.
+
+**Separate roles.** OpenZeppelin `AccessControl` splits administration into three roles: one manages judges, one manages teams, and the admin can recover tokens sent to the contract by mistake.
+
+## What we shipped
+
+- **[CouncilFactory](https://github.com/BlossomLabs/councilhaus/tree/master/contracts/councilhaus/contracts)** deploys a new council, its voting token and its pool in one transaction, with its first judges and teams already set. It is deployed at the same address on **Optimism** and **Base**.
+- **A subgraph** indexes councils, members, grantees and allocations on both networks.
+- **[council.haus](https://council.haus)**, a web app where anyone can create a council, judges allocate their units, and everyone can see how the budget is currently split and what each team is receiving.
+- **Unit and integration tests** run against a forked network with real Superfluid contracts.
+
+## Seasons 2 and 3, on-chain
+
+Because everything happens on-chain, both seasons can be replayed from the council contracts on Base: [Season 2](https://basescan.org/address/0xfa942226e5dd1e2d4d99014982846786b09939da) and [Season 3](https://basescan.org/address/0xB0A240F3887436A94fC2Af895103350971E271da).
+
+| | Season 2 | Season 3 |
+| --- | --- | --- |
+| Stream | 15,000 USDCx per 30 days | 20,000 USDCx per 30 days |
+| Streaming | 25 Sep – 20 Nov 2024 | 22 Jan – 18 Mar 2025 |
+| Teams | 6 | 6 |
+| Demo days | 4 | 4 |
+| Judges per demo day | 5 | 6 |
+| Most teams one judge could vote for | 4 | 4 |
+| Distributed to teams | **27,440 USDCx** | **39,784 USDCx** |
+
+That's **67,224 USDCx** across the two seasons, with no one updating a spreadsheet or a stream by hand between demo days. Each season kept a core of regular judges and rotated guest judges in and out around each demo day, which the council handles by adding and removing members. Several builders from Season 2 came back for Season 3.
+
+In Season 3, 3,291 USDCx ended up in the council contract itself, not in the pool. The admin recovered it with `withdraw` and distributed it to the teams through the pool the same day, which is exactly what that role is for.
+
+### The votes moved the money
+
+Each team's share of the units after each demo day, and what it received in total. Teams are ordered by amount received.
+
+**Season 2**
+
+| Team | 26 Sep | 10 Oct | 24 Oct | 6 Nov | Streamed |
+| --- | --- | --- | --- | --- | --- |
+| A | 22% | 13% | 23% | 30% | 5,961 USDCx |
+| B | 15% | 32% | 20% | 12% | 5,472 USDCx |
+| C | 30% | 10% | 12% | 26% | 5,375 USDCx |
+| D | 20% | 11% | 20% | 12% | 4,258 USDCx |
+| E | 5% | 15% | 19% | 20% | 4,033 USDCx |
+| F | 8% | 19% | 6% | 0% | 2,341 USDCx |
+
+**Season 3**
+
+| Team | 23 Jan | 6 Feb | 20 Feb | 4 Mar | Streamed |
+| --- | --- | --- | --- | --- | --- |
+| A | 28% | 32% | 34% | 26% | 10,822 USDCx |
+| B | 21% | 10% | 15% | 34% | 7,164 USDCx |
+| C | 26% | 22% | 23% | 6% | 6,891 USDCx |
+| D | 8% | 13% | 13% | 18% | 4,796 USDCx |
+| E | 10% | 18% | 2% | 10% | 3,936 USDCx |
+| F | 7% | 5% | 14% | 6% | 2,884 USDCx |
+
+Shares moved a lot between demo days. In Season 2, one team went from the top of the vote to 10% two weeks later and climbed back to 26%. Another ended the season with no votes at all, and its stream stopped. In Season 3, one team fell from 22% to 2% and recovered, and the team that had dropped to 10% in February finished first on the last vote. That spread is what a single prize can't give you: teams were paid for how they were doing at each point in the season, not for one final pitch.
+
+## Results
+
+Season 2 closed with **80% of its projects in production**. Superfluid credits the streaming incentive for a large part of that. Over Seasons 2 and 3, CouncilHaus streamed more than $67,000 to the teams, re-split after each of eight demo days.
+
+## What came next
+
+CouncilHaus found its second customer. In October 2024 **[Flow State](https://flowstate.network/)**, a cooperative building streaming funding tools, forked it into **[Flow Councils](https://docs.flowstate.network/platform/flow-councils/)**.
+
+- **GoodDollar** runs its GoodBuilders program on it, streaming G$ to teams building on Celo. GoodBuilders Season 2 (2025) ran on the CouncilHaus contracts and streamed **$70,000 plus 50,000 CELO**. Flow State then rewrote the contract, keeping the same design: votes become units in a Superfluid pool. In Season 3, **nearly 2,000 authenticated voters** split another $50,000 between 11 teams, and Season 4 is streaming $50,000 more.
+- **[Flow Caster](https://github.com/flow-state-coop/flow-caster)**, a Farcaster mini app, integrates the same council contracts on Base and Arbitrum.
+
+## What we learned
+
+- **Start with a spreadsheet.** Season 1 proved the mechanism, and the parameters, before anyone wrote a contract. Building on-chain afterwards meant automating a process people already trusted.
+- **Let the protocol do the maths.** The GDA already splits a stream by units. By mapping votes onto units, CouncilHaus stays small: it keeps track of who voted what, and Superfluid handles the payments.
+- **Continuous funding needs continuous feedback.** A stream that changes every two weeks keeps teams shipping in a way a single prize doesn't. The demo days mattered as much as the contracts.
+- **Build for the second customer.** CouncilHaus was built for the Frontier Guild, but nothing in it is specific to Superfluid. Any team with a budget and a group of people to decide how to split it can deploy a council.
