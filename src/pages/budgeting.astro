@@ -1,0 +1,23 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Budgeting from '../components/budgeting/Budgeting';
+import '../components/budgeting/base.css';
+
+const title = 'How the vote works · Blossom Budgeting';
+const description = "Blossom Budgeting for TheDAO's Round Two: tiered ballots, a proportional tally, sealed votes. An interactive explainer of the tally with a ballot you can fill in.";
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+    <script is:inline>
+      try {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <Budgeting client:load />
+  </body>
+</html>
